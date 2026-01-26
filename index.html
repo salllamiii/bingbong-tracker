@@ -8,14 +8,12 @@
     :root{
       --bg:#0b1020; --text:#e9ecff; --muted:#aab2ff;
       --accent:#7c5cff; --accent2:#27d8a7; --warn:#ffcc66; --danger:#ff4d6d;
-      --shadow: 0 10px 30px rgba(0,0,0,.35);
-      --radius: 18px;
+      --shadow: 0 10px 30px rgba(0,0,0,.35); --radius: 18px;
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
     }
     body{ margin:0; background: radial-gradient(1200px 800px at 20% 0%, #1b1f52, var(--bg));
       color:var(--text); min-height:100vh; display:flex; align-items:center; justify-content:center; padding:18px;}
-    .wrap{ width:min(1120px, 100%); display:grid; gap:16px; grid-template-columns: 1.2fr .8fr; }
-    @media (max-width: 940px){ .wrap{ grid-template-columns: 1fr; } }
+    .wrap{ width:min(880px, 100%); display:grid; gap:16px; }
     .card{ background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
       border: 1px solid rgba(255,255,255,.10); border-radius: var(--radius);
       box-shadow: var(--shadow); padding:18px; backdrop-filter: blur(10px); }
@@ -27,8 +25,10 @@
       border-radius:999px; font-size:13px; color: #efeaff; }
     .pill.ok{ background: rgba(39,216,167,.14); border-color: rgba(39,216,167,.35); }
     .pill.warn{ background: rgba(255,204,102,.14); border-color: rgba(255,204,102,.35); }
-    .pill.bad{ background: rgba(255,77,109,.12); border-color: rgba(255,77,109,.35); }
-
+    .banner{
+      margin-top:12px; background: rgba(255,204,102,.12); border: 1px solid rgba(255,204,102,.35);
+      border-radius: 16px; padding: 12px; color: #fff2cc; display:none;
+    }
     .entry{
       background: rgba(0,0,0,.22); border:1px solid rgba(255,255,255,.08);
       border-radius: 16px; padding:12px;
@@ -43,29 +43,6 @@
     .bar{ height: 100%; width: 0%; background: linear-gradient(90deg, var(--accent), var(--accent2));
       border-radius: 999px; transition: width .6s ease; }
 
-    .btns{ display:flex; gap:10px; flex-wrap:wrap; margin-top:10px; }
-    button{
-      cursor:pointer; border:0; padding:10px 12px; border-radius: 14px; color: #0b1020;
-      background: linear-gradient(90deg, var(--accent), var(--accent2));
-      font-weight: 800;
-    }
-    button.secondary{
-      background: rgba(255,255,255,.10); color: var(--text); border:1px solid rgba(255,255,255,.14);
-      font-weight: 700;
-    }
-
-    .banner{
-      margin-top:12px;
-      background: rgba(255,204,102,.12);
-      border: 1px solid rgba(255,204,102,.35);
-      border-radius: 16px;
-      padding: 12px;
-      color: #fff2cc;
-      display:none;
-    }
-    .tiny{ font-size:12px; color: var(--muted); margin-top:10px; }
-    .mono{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
-
     .timeline{ margin-top:12px; display:flex; flex-direction:column; gap:10px; }
     .scan{
       display:grid; grid-template-columns: 28px 1fr; gap:10px; align-items:start;
@@ -75,24 +52,20 @@
     .dot{
       width: 18px; height: 18px; border-radius: 999px; margin-top:2px;
       border: 2px solid rgba(255,255,255,.18);
-      display:flex; align-items:center; justify-content:center;
-      font-size:12px;
+      display:flex; align-items:center; justify-content:center; font-size:12px;
+      background: rgba(39,216,167,.18); border-color: rgba(39,216,167,.45);
     }
-    .scan.done .dot{ background: rgba(39,216,167,.18); border-color: rgba(39,216,167,.45); }
-    .scan.next .dot{ background: rgba(255,204,102,.18); border-color: rgba(255,204,102,.45); }
-    .scan.later .dot{ background: rgba(255,255,255,.06); }
     .scanTitle{ font-weight:900; }
     .scanMeta{ color: var(--muted); font-size:12px; margin-top:2px; }
     .scanDesc{ margin-top:6px; color: #eef0ff; line-height:1.4; }
-
     .footerNote{ text-align:center; color: rgba(255,255,255,.6); font-size:12px; margin-top:10px; }
+    .tiny{ font-size:12px; color: var(--muted); margin-top:10px; }
+    .mono{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
   </style>
 </head>
 
 <body>
   <div class="wrap">
-
-    <!-- MAIN -->
     <div class="card">
       <h1>📦 Bing Bong Tracker</h1>
       <p class="sub" id="subtitle">Loading dispatch chaos…</p>
@@ -109,50 +82,24 @@
 
       <div class="entry" style="margin-top:10px;">
         <div class="entryTop">
-          <div class="place" id="currentPlace">Current stop: —</div>
+          <div class="place" id="currentPlace">Latest scan: —</div>
           <div class="when" id="countdown">—</div>
         </div>
         <p class="msg" id="currentMsg">—</p>
         <div class="progressBox" aria-label="progress">
           <div class="bar" id="bar"></div>
         </div>
-        <div class="tiny" id="routeLine">Route: —</div>
+        <div class="tiny" id="spoilerSafeHint">No spoilers. No future scans. Bing Bong is surviving in real time.</div>
       </div>
 
-      <div class="btns">
-        <button class="secondary" id="waShareBtn">Share to Pev (WhatsApp)</button>
-        <button class="secondary" id="refreshBtn">Refresh Scans</button>
-      </div>
-
-      <h2>🛰️ Scan Events (Absolutely Real)</h2>
-      <p class="sub">Courier scans + island survival scans. Bing Bong is doing logistics and cardio.</p>
+      <h2>🛰️ Scan History</h2>
+      <p class="sub">Only scans that have already happened are shown. Bing Bong refuses to leak the script.</p>
       <div class="timeline" id="timeline"></div>
 
       <div class="footerNote">
-        100% chaotic scout energy. 0% legal parcel tracking.
+        100% chaotic scout energy. 0% legally binding parcel tracking.
       </div>
     </div>
-
-    <!-- SIDE -->
-    <div class="card">
-      <h2>📌 How this works</h2>
-      <p class="sub">
-        This tracker reads updates from <span class="mono">data.json</span>. When the dispatcher (you) edits that file on GitHub,
-        Pev sees new scans at the same link.
-      </p>
-      <div class="entry">
-        <div class="place">Dispatcher Notes</div>
-        <p class="msg">
-          If changes don’t show immediately: refresh once or twice (sometimes browsers cache). Worst case: hard refresh.
-        </p>
-      </div>
-      <div class="entry" style="margin-top:12px;">
-        <div class="place">Suggested next scan</div>
-        <p class="msg" id="suggestion">Loading suggestion…</p>
-      </div>
-      <div class="tiny" id="loadedAt"></div>
-    </div>
-
   </div>
 
 <script>
@@ -189,7 +136,7 @@ function escapeHtml(str){
     .replaceAll('"',"&quot;").replaceAll("'","&#039;");
 }
 
-// Fake tracking number (stable)
+// stable fake tracking number
 function fnv1a(str){
   let h = 0x811c9dc5;
   for(let i=0;i<str.length;i++){
@@ -217,7 +164,6 @@ function effectiveArrivalISO(d){
 }
 
 async function loadData(){
-  // Cache-bust so edits show quicker on GitHub Pages
   const res = await fetch(`./data.json?v=${Date.now()}`, { cache: "no-store" });
   if(!res.ok) throw new Error("Could not load data.json");
   return await res.json();
@@ -237,69 +183,57 @@ function computeProgress(d){
   const delivered = now >= end;
   const preShip = ship && now < ship;
 
-  const stages = (d.checkpoints || []).length || 1;
-  let stageIndex = clamp(Math.floor(pct * (stages - 1)), 0, stages - 1);
-  if(preShip) stageIndex = clamp(Math.floor(pct * 3), 0, Math.min(2, stages - 1));
-  if(delivered) stageIndex = stages - 1;
-
-  return { now, start, end, pct, stageIndex, arrivalISO, delivered, preShip };
+  return { now, start, end, pct, arrivalISO, delivered, preShip };
 }
 
-function renderTimeline(d, now){
+function scansThatHaveHappened(d, now){
+  const scans = Array.isArray(d.scans) ? d.scans.slice() : [];
+  // include only scans with whenISO <= now
+  return scans
+    .filter(s => {
+      const t = dateFromISO(s.whenISO);
+      return t && t <= now;
+    })
+    .sort((a,b) => (dateFromISO(a.whenISO) - dateFromISO(b.whenISO)));
+}
+
+function renderTimeline(pastScans){
   const box = el("timeline");
   box.innerHTML = "";
 
-  const scans = Array.isArray(d.scans) ? d.scans.slice().sort((a,b)=>{
-    const ta = dateFromISO(a.whenISO)?.getTime() ?? 0;
-    const tb = dateFromISO(b.whenISO)?.getTime() ?? 0;
-    return ta - tb;
-  }) : [];
+  if(pastScans.length === 0){
+    box.innerHTML = `
+      <div class="entry">
+        <div class="place">No scans yet</div>
+        <p class="msg">Bing Bong is currently off-grid, doing mysterious island prep.</p>
+      </div>
+    `;
+    return;
+  }
 
-  const nextIndex = scans.findIndex(s => {
-    const t = dateFromISO(s.whenISO);
-    return t && t > now;
-  });
-
-  scans.forEach((s, idx) => {
-    const t = dateFromISO(s.whenISO);
-    const done = t ? (t <= now) : false;
-    const isNext = (idx === nextIndex);
-    const cls = done ? "scan done" : (isNext ? "scan next" : "scan later");
-    const icon = done ? "✓" : (isNext ? "!" : "•");
-
+  // Show newest first in history
+  pastScans.slice().reverse().forEach(s => {
     const div = document.createElement("div");
-    div.className = cls;
+    div.className = "scan";
     div.innerHTML = `
-      <div class="dot">${icon}</div>
+      <div class="dot">✓</div>
       <div>
         <div class="scanTitle">${escapeHtml(s.title || "SCAN")}</div>
-        <div class="scanMeta">${escapeHtml(s.loc || "Unknown")} • ${escapeHtml(t ? niceDate(s.whenISO) : "Unknown time")}</div>
+        <div class="scanMeta">${escapeHtml(s.loc || "Unknown")} • ${escapeHtml(niceDate(s.whenISO))}</div>
         <div class="scanDesc">${escapeHtml(s.desc || "")}</div>
       </div>
     `;
     box.appendChild(div);
   });
-
-  // Suggest the next funny scan based on “nextIndex”
-  const suggestion = [
-    "“CUSTOMS CHECK: Bing Bong declared himself ‘Head Scout’ and attempted to loot a stamp.”",
-    "“SORTING FACILITY: Bing Bong got stuck on a conveyor belt and called it cardio.”",
-    "“ROUTE UPDATE: Bing Bong insisted the fastest path is straight up (again).”",
-    "“FIELD REPORT: Bing Bong discovered bubble wrap and entered his villain era.”"
-  ];
-  el("suggestion").textContent = nextIndex >= 0
-    ? `Next scan idea: ${suggestion[nextIndex % suggestion.length]}`
-    : `Next scan idea: “FINAL BOSS: Pev’s front door. Bing Bong is approaching at maximum plush velocity.”`;
 }
 
 function render(d){
-  const { now, pct, stageIndex, arrivalISO, delivered, preShip } = computeProgress(d);
+  const { now, pct, arrivalISO, delivered, preShip, end } = computeProgress(d);
 
   el("subtitle").textContent =
     `Mission: deliver Bing Bong to ${d.friendName || "Pev"}. Birthday: ${niceDate(d.birthdayDate)}.`;
 
-  const tn = makeTrackingNumber(d);
-  el("trackingPill").textContent = `Tracking: ${tn}`;
+  el("trackingPill").textContent = `Tracking: ${makeTrackingNumber(d)}`;
 
   el("etaPill").textContent = arrivalISO
     ? `ETA: ${niceDate(arrivalISO)}${d.arrivalDate ? " (manual)" : " (est.)"}`
@@ -354,40 +288,18 @@ function render(d){
     }
   }
 
-  const cp = (d.checkpoints || [])[stageIndex] || { name: "Somewhere Vertical", msg: "Bing Bong is progressing… emotionally." };
-  el("currentPlace").textContent = `Current stop: ${cp.name}`;
-  el("currentMsg").textContent = cp.msg;
-  el("routeLine").textContent = `Route: ${(d.checkpoints||[]).map(x=>x.name).join(" → ")}`;
+  // ONLY show latest scan that has happened (no route spoilers)
+  const past = scansThatHaveHappened(d, now);
+  if(past.length > 0){
+    const latest = past[past.length - 1];
+    el("currentPlace").textContent = `Latest scan: ${latest.title || "SCAN"}`;
+    el("currentMsg").textContent = `${latest.loc || "Unknown"} — ${niceDate(latest.whenISO)}. ${latest.desc || ""}`;
+  } else {
+    el("currentPlace").textContent = "Latest scan: Pending";
+    el("currentMsg").textContent = "Bing Bong is currently off-grid, gathering supplies and emotional resilience.";
+  }
 
-  renderTimeline(d, now);
-
-  el("loadedAt").textContent = `Last loaded: ${new Date().toLocaleString()}`;
-}
-
-function wireButtons(currentData){
-  el("refreshBtn").onclick = async () => {
-    try{
-      const d = await loadData();
-      render(d);
-      wireButtons(d);
-    }catch(e){
-      alert("Could not refresh. If you just edited data.json, try again in a moment.");
-    }
-  };
-
-  el("waShareBtn").onclick = () => {
-    const d = currentData;
-    const tn = makeTrackingNumber(d);
-    const link = location.href.split("#")[0]; // keep it clean
-    const text =
-      `🚨 BING BONG TRACKER 🚨\n\n` +
-      `Tracking: ${tn}\n` +
-      `Recipient: ${d.friendName || "Pev"}\n` +
-      `${el("statusPill").textContent}\n` +
-      `${el("etaPill").textContent}\n\n` +
-      `Live feed (totally official): ${link}`;
-    window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, "_blank");
-  };
+  renderTimeline(past);
 }
 
 // Boot
@@ -395,11 +307,10 @@ function wireButtons(currentData){
   try{
     const d = await loadData();
     render(d);
-    wireButtons(d);
   }catch(e){
     el("subtitle").textContent = "Couldn’t load data.json 😭";
     el("currentMsg").textContent =
-      "If you’re seeing this on GitHub Pages, make sure BOTH files exist in the repo root: index.html and data.json.";
+      "If you’re seeing this on GitHub Pages, make sure data.json exists in the repo root alongside index.html.";
   }
 })();
 </script>
