@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Bing Bong Tracker — Dispatch Console</title>
+  <style>
+    :root{
+      --bg:#0b1020; --text:#e9ecff; --muted:#aab2ff;
+      --accent:#7c5cff; --accent2:#27d8a7; --warn:#ffcc66; --danger:#ff4d6d;
+      --shadow: 0 10px 30px rgba(0,0,0,.35); --radius: 18px;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+    }
+    body{ margin:0; background: radial-gradient(1200px 800px at 20% 0%, #1b1f52, var(--bg));
+      color:var(--text); min-height:100vh; display:flex; align-items:center; justify-content:center; padding:18px;}
+    .wrap{ width:min(980px, 100%); display:grid; gap:16px; }
+    .card{ background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      border: 1px solid rgba(255,255,255,.10); border-radius: var(--radius);
+      box-shadow: var(--shadow); padding:18px; backdrop-filter: blur(10px); }
+    h1{ margin:0 0 6px; }
+    .sub{ color: var(--muted); margin:0 0 14px; line-height:1.4; }
+    .row{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+    .pill{ padding:8px 10px; background: rgba(124,92,255,.18); border:1px solid rgba(124,92,255,.35);
+      border-radius:999px; font-size:13px; color: #efeaff; }
+    .pill.warn{ background: rgba(255,204,102,.14); border-color: rgba(255,204,102,.35); }
+    .btns{ display:flex; gap:10px; flex-wrap:wrap; margin-top:10px; }
+    button{
+      cursor:pointer; border:0; padding:10px 12px; border-radius: 14px; color: #0b1020;
+      background: linear-gradient(90deg, var(--accent), var(--accent2)); font-weight: 800;
+    }
+    button.secondary{
+      background: rgba(255,255,255,.10); color: var(--text); border:1px solid rgba(255,255,255,.14);
+      font-weight: 700;
+    }
+    textarea, input{
+      width:100%; box-sizing:border-box; padding:10px 12px; border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.12); background: rgba(0,0,0,.25);
+      color: var(--text); outline:none;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    }
+    textarea{ min-height: 120px; resize: vertical; }
+    .grid2{ display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-top:14px; }
+    @media (max-width: 720px){ .grid2{ grid-template-columns: 1fr; } }
+    .timeline{ margin-top:12px; display:flex; flex-direction:column; gap:10px; }
+    .item{ background: rgba(0,0,0,.18); border:1px solid rgba(255,255,255,.08);
+      border-radius: 16px; padding:10px 12px; }
+    .title{ font-weight:900; }
+    .meta{ color: var(--muted); font-size:12px; margin-top:2px; }
+    .desc{ margin-top:6px; line-height:1.4; }
+    .gate{ display:none; }
+    .mono{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card gate" id="gate">
+      <h1>🔒 Dispatch Console Locked</h1>
+      <p class="sub">
+        Open this page with <span class="mono">#key=YOUR_SECRET</span> in the URL.
+        Example: <span class="mono">admin.html#key=pevsurprise123</span>
+      </p>
+    </div>
+
+    <div class="card gate" id="console">
+      <h1>🛠️ Dispatch Console</h1>
+      <p class="sub">You control the narrative. Pev gets zero buttons. Bing Bong gets cardio.</p>
+
+      <div class="row">
+        <span class="pill warn" id="viewerUrlPill">Viewer: —</span>
+      </div>
+
+      <div class="btns">
+        <button id="refreshBtn">Refresh from data.json</button>
+        <button class="secondary" id="copyViewerBtn">Copy Viewer Link</button>
+        <button class="secondary" id="waShareBtn">Share to Pev (WhatsApp)</button>
+      </div>
+
+      <h2 style="margin-top:18px;">➕ Create a new scan block (copy/paste into data.json)</h2>
+      <div class="grid2">
+        <div>
+          <label style="color:var(--muted); font-size:12px;">Title</label>
+          <input id="t" placeholder="e.g., ARRIVED AT: ROOTS BIOME" />
+        </div>
+        <div>
+          <label style="color:var(--muted); font-size:12px;">Location</label>
+          <input id="l" placeholder="e.g., Forest Shenanigans" />
+        </div>
+        <div>
+          <label style="color:var(--muted); font-size:12px;">Date (YYYY-MM-DD)</label>
+          <input id="d" placeholder="e.g., 2026-02-28" />
+        </div>
+        <div>
+          <label style="color:var(--muted); font-size:12px;">Description</label>
+          <input id="x" placeholder="e.g., Bing Bong attempted stamina management. He spent it on vibes." />
+        </div>
+      </div>
+
+      <div class="btns">
+        <button class="secondary" id="makeBlockBtn">Generate JSON scan block</button>
+        <button class="secondary" id="copyBlockBtn">Copy scan block</button>
+      </div>
+
+      <textarea id="blockOut" readonly></textarea>
+
+      <h2 style="margin-top:18px;">📜 Full scan list (includes future)</h2>
+      <div class="timeline" id="allScans"></div>
+    </div>
+  </div>
+
+<script>
+const ADMIN_SECRET = "CHANGE_ME_TO_SOMETHING_RANDOM"; // <-- set this once
+
+const el = (id) => document.getElementById(id);
+
+function getKey(){
+  const h = location.hash || "";
+  const m = h.match(/key=([^&]+)/);
+  return m ? decodeURIComponent(m[1]) : "";
+}
+async function loadData(){
+  const res = await fetch(`./data.json?v=${Date.now()}`, { cache: "no-store" });
+  if(!res.ok) throw new Error("Could not load data.json");
+  return await res.json();
+}
+function niceDate(iso){
+  const d = new Date(iso + "T12:00:00");
+  return isNaN(d) ? "—" : d.toLocaleDateString(undefined, { year:"numeric", month:"short", day:"numeric" });
+}
+function escapeHtml(str){
+  return String(str)
+    .replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;").replaceAll("'","&#039;");
+}
+function viewerUrl(){
+  const base = location.href.split("admin.html")[0] + "index.html";
+  return base.replace("admin.html", "index.html");
+}
+
+function renderAllScans(d){
+  const box = el("allScans");
+  box.innerHTML = "";
+  const scans = Array.isArray(d.scans) ? d.scans.slice() : [];
+  scans.sort((a,b) => (new Date(a.whenISO) - new Date(b.whenISO)));
+  scans.forEach(s => {
+    const div = document.createElement("div");
+    div.className = "item";
+    div.innerHTML = `
+      <div class="title">${escapeHtml(s.title || "SCAN")}</div>
+      <div class="meta">${escapeHtml(s.loc || "Unknown")} • ${escapeHtml(niceDate(s.whenISO))}</div>
+      <div class="desc">${escapeHtml(s.desc || "")}</div>
+    `;
+    box.appendChild(div);
+  });
+}
+
+function buildShareText(d, viewer){
+  const friend = d.friendName || "Pev";
+  const eta = d.arrivalDate ? d.arrivalDate : "(est.)";
+  return (
+`🚨 BING BONG TRACKER 🚨
+
+Recipient: ${friend}
+Birthday: ${d.birthdayDate || "—"}
+Shipment: ${d.shipmentDate || "—"} (+${d.deliveryWindowDays || "?"} days)
+
+Live tracker (no spoilers): ${viewer}`
+  );
+}
+
+let CURRENT_DATA = null;
+
+async function refresh(){
+  const d = await loadData();
+  CURRENT_DATA = d;
+  el("viewerUrlPill").textContent = `Viewer: ${viewerUrl()}`;
+  renderAllScans(d);
+}
+
+function init(){
+  const key = getKey();
+  const gate = el("gate");
+  const console = el("console");
+
+  if(key !== ADMIN_SECRET){
+    gate.style.display = "block";
+    console.style.display = "none";
+    return;
+  }
+  gate.style.display = "none";
+  console.style.display = "block";
+
+  el("refreshBtn").onclick = async () => {
+    try{ await refresh(); } catch(e){ alert("Refresh failed. Check data.json exists."); }
+  };
+
+  el("copyViewerBtn").onclick = async () => {
+    const v = viewerUrl();
+    try{ await navigator.clipboard.writeText(v); alert("Viewer link copied"); }
+    catch(e){ prompt("Copy viewer link:", v); }
+  };
+
+  el("waShareBtn").onclick = () => {
+    if(!CURRENT_DATA){ alert("Hit refresh first."); return; }
+    const v = viewerUrl();
+    const text = buildShareText(CURRENT_DATA, v);
+    window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, "_blank");
+  };
+
+  el("makeBlockBtn").onclick = () => {
+    const block = {
+      title: el("t").value.trim() || "SCAN EVENT",
+      loc: el("l").value.trim() || "Somewhere Vertical",
+      whenISO: el("d").value.trim() || "",
+      desc: el("x").value.trim() || "Bing Bong did something brave and slightly inconvenient."
+    };
+    el("blockOut").value = JSON.stringify(block, null, 2) + ",";
+  };
+
+  el("copyBlockBtn").onclick = async () => {
+    const txt = el("blockOut").value.trim();
+    if(!txt){ alert("Generate a block first."); return; }
+    try{ await navigator.clipboard.writeText(txt); alert("Scan block copied"); }
+    catch(e){ prompt("Copy scan block:", txt); }
+  };
+
+  refresh();
+}
+
+// IMPORTANT: change this to your secret before publishing!
+init();
+</script>
+</body>
+</html>
