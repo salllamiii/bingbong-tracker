@@ -1,0 +1,61 @@
+{
+  "friendName": "Pev",
+  "birthdayDate": "2026-01-29",
+  "orderDate": "2026-01-26",
+  "shipmentDate": "2026-02-22",
+  "deliveryWindowDays": 10,
+  "arrivalDate": "",
+  "trackingPrefix": "BB",
+  "storyTone": "chaotic-scout",
+  "checkpoints": [
+    { "name": "Label Created (Bing Bong vs Printer)", "msg": "Bing Bong fought the label printer. The printer won. Bing Bong is plotting a rematch." },
+    { "name": "Dispatch Prep (Snack Audit)", "msg": "Bing Bong is auditing snacks like a tiny accountant with a head injury." },
+    { "name": "Departed Facility (WHEEEE)", "msg": "The parcel moved. Bing Bong squeaked. This is now a sport." },
+    { "name": "In Transit (Turbulence Arc)", "msg": "Turbulence happened. Bing Bong achieved enlightenment briefly, then forgot it immediately." },
+    { "name": "Plane Crash: Mysterious Island", "msg": "Bad news: crash. Good news: Bing Bong is now the emotional support Scout of the expedition." },
+    { "name": "Shore Camp (Short Rest Scam)", "msg": "Bing Bong declared a short rest. Everyone rested. Nobody asked questions." },
+    { "name": "Climb Begins (Stamina: 0)", "msg": "Bing Bong attempted stamina management. He spent all stamina on vibes." },
+    { "name": "Biome: Roots / Forest Shenanigans", "msg": "Bing Bong is weaving through roots like he owns the terrain. He does not." },
+    { "name": "Biome: Caldera (Hot Bad Decisions)", "msg": "Bing Bong approached lava, reconsidered, and filed an official complaint with the sun." },
+    { "name": "The PEAK (Flare Lit)", "msg": "Bing Bong reached the PEAK. A flare was launched. Rescue is (probably) on the way." },
+    { "name": "DELIVERED TO PEV ✅", "msg": "Bing Bong has arrived. He requests snacks, a warm shelf, and to be praised like a tiny hero." }
+  ],
+  "scans": [
+    {
+      "title": "LABEL CREATED",
+      "loc": "BingBong Airlines Desk",
+      "whenISO": "2026-01-26",
+      "desc": "A shipping label appeared. Bing Bong stared at it like it owed him money."
+    },
+    {
+      "title": "DISPATCH PREP",
+      "loc": "Snack Audit Division",
+      "whenISO": "2026-01-27",
+      "desc": "Bing Bong filed Form SQUEAK-17 (Request: More Snacks). It was approved by nobody."
+    },
+    {
+      "title": "SHIPPED (EST.)",
+      "loc": "Outbound Facility",
+      "whenISO": "2026-02-22",
+      "desc": "Parcel departed. Bing Bong yelled “WE RIDE!” and immediately regretted it."
+    },
+    {
+      "title": "INCIDENT: PLANE CRASH",
+      "loc": "Mysterious Island Shore",
+      "whenISO": "2026-02-24",
+      "desc": "Bad news: crash. Good news: Bing Bong is now Head Scout by force of squeak."
+    },
+    {
+      "title": "SUMMIT: THE PEAK (FLARE)",
+      "loc": "Rescue Flare Platform",
+      "whenISO": "2026-03-02",
+      "desc": "Flare launched. Bing Bong poses heroically in the wind (imaginary wind)."
+    },
+    {
+      "title": "DELIVERED ✅ (EST.)",
+      "loc": "Pev’s Lair",
+      "whenISO": "2026-03-04",
+      "desc": "Bing Bong has arrived. He requests a warm shelf and excessive praise."
+    }
+  ]
+}
