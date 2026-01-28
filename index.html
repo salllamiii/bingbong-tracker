@@ -344,9 +344,19 @@ function render(d){
   el("trackingPill").textContent = `Tracking: ${makeTrackingNumber(d)}`;
 
   const arrivalISO = effectiveArrivalISO(d);
-  el("etaPill").textContent = arrivalISO
-    ? `ETA: ${niceDate(arrivalISO)}${d.arrivalDate ? " (manual)" : " (est.)"}`
-    : `ETA: Unknown (Bing Bong is “freestyling”)`;
+  // --- Fake ETA: countdown to crash, then ??? ---
+const crashScan = (Array.isArray(d.scans) ? d.scans : []).find(s => String(s.stageKey) === "crash");
+const crashDate = crashScan ? dateFromISO(crashScan.whenISO) : null;
+
+if (crashDate && now < crashDate) {
+  const daysToCrash = daysBetween(now, crashDate);
+  el("etaPill").textContent = `ETA: ${daysToCrash} day(s) until incident`;
+} else if (crashDate && now >= crashDate) {
+  el("etaPill").textContent = "ETA: ??? (signal lost)";
+} else {
+  el("etaPill").textContent = "ETA: Bing Bong-time";
+}
+
 
   // status + countdown
   const arrival = arrivalISO ? dateFromISO(arrivalISO) : null;
