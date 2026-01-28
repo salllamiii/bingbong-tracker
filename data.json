@@ -1,61 +1,224 @@
 {
   "friendName": "Pev",
   "birthdayDate": "2026-01-29",
-  "orderDate": "2026-01-26",
-  "shipmentDate": "2026-02-22",
-  "deliveryWindowDays": 10,
-  "arrivalDate": "",
+  "orderDate": "2026-01-28",
+  "shipmentDate": "2026-01-30",
+  "deliveryWindowDays": 33,
+  "arrivalDate": "2026-03-04",
   "trackingPrefix": "BB",
-  "storyTone": "chaotic-scout",
-  "checkpoints": [
-    { "name": "Label Created (Bing Bong vs Printer)", "msg": "Bing Bong fought the label printer. The printer won. Bing Bong is plotting a rematch." },
-    { "name": "Dispatch Prep (Snack Audit)", "msg": "Bing Bong is auditing snacks like a tiny accountant with a head injury." },
-    { "name": "Departed Facility (WHEEEE)", "msg": "The parcel moved. Bing Bong squeaked. This is now a sport." },
-    { "name": "In Transit (Turbulence Arc)", "msg": "Turbulence happened. Bing Bong achieved enlightenment briefly, then forgot it immediately." },
-    { "name": "Plane Crash: Mysterious Island", "msg": "Bad news: crash. Good news: Bing Bong is now the emotional support Scout of the expedition." },
-    { "name": "Shore Camp (Short Rest Scam)", "msg": "Bing Bong declared a short rest. Everyone rested. Nobody asked questions." },
-    { "name": "Climb Begins (Stamina: 0)", "msg": "Bing Bong attempted stamina management. He spent all stamina on vibes." },
-    { "name": "Biome: Roots / Forest Shenanigans", "msg": "Bing Bong is weaving through roots like he owns the terrain. He does not." },
-    { "name": "Biome: Caldera (Hot Bad Decisions)", "msg": "Bing Bong approached lava, reconsidered, and filed an official complaint with the sun." },
-    { "name": "The PEAK (Flare Lit)", "msg": "Bing Bong reached the PEAK. A flare was launched. Rescue is (probably) on the way." },
-    { "name": "DELIVERED TO PEV ✅", "msg": "Bing Bong has arrived. He requests snacks, a warm shelf, and to be praised like a tiny hero." }
-  ],
+
   "scans": [
     {
       "title": "LABEL CREATED",
       "loc": "BingBong Airlines Desk",
-      "whenISO": "2026-01-26",
+      "whenISO": "2026-01-28",
+      "stageKey": "dispatch",
+      "progressMode": "fixed",
+      "progressValue": 10,
       "desc": "A shipping label appeared. Bing Bong stared at it like it owed him money."
     },
     {
-      "title": "DISPATCH PREP",
-      "loc": "Snack Audit Division",
-      "whenISO": "2026-01-27",
-      "desc": "Bing Bong filed Form SQUEAK-17 (Request: More Snacks). It was approved by nobody."
-    },
-    {
-      "title": "SHIPPED (EST.)",
+      "title": "SHIPPED",
       "loc": "Outbound Facility",
-      "whenISO": "2026-02-22",
+      "whenISO": "2026-01-30",
+      "stageKey": "shipped",
+      "progressMode": "fixed",
+      "progressValue": 50,
       "desc": "Parcel departed. Bing Bong yelled “WE RIDE!” and immediately regretted it."
     },
     {
       "title": "INCIDENT: PLANE CRASH",
-      "loc": "Mysterious Island Shore",
-      "whenISO": "2026-02-24",
-      "desc": "Bad news: crash. Good news: Bing Bong is now Head Scout by force of squeak."
+      "loc": "The Shore (Mysterious Island)",
+      "whenISO": "2026-02-01",
+      "stageKey": "crash",
+      "progressMode": "unknown",
+      "desc": "Bad news: crash. Good news: Bing Bong appointed himself Head Scout by force of squeak."
     },
     {
-      "title": "SUMMIT: THE PEAK (FLARE)",
-      "loc": "Rescue Flare Platform",
+      "title": "SURVIVAL: SHORE CAMP",
+      "loc": "The Shore",
+      "whenISO": "2026-02-02",
+      "stageKey": "shore",
+      "progressMode": "unknown",
+      "desc": "Bing Bong declared a “short rest”. Everyone complied. Nobody remembers voting."
+    },
+    {
+      "title": "BIOME ENTERED: TROPICS",
+      "loc": "Tropics",
+      "whenISO": "2026-02-05",
+      "stageKey": "tropics",
+      "progressMode": "unknown",
+      "desc": "Humidity 100%. Morale 3%. Bing Bong’s squeak echoes through the rainforest like a warning."
+    },
+    {
+      "title": "BIOME ENTERED: ROOTS",
+      "loc": "Roots",
+      "whenISO": "2026-02-09",
+      "stageKey": "roots",
+      "progressMode": "unknown",
+      "desc": "Wind, vertical nonsense, and root geometry. Bing Bong is clinging on with pure audacity."
+    },
+    {
+      "title": "BIOME ENTERED: MESA",
+      "loc": "Mesa",
+      "whenISO": "2026-02-14",
+      "stageKey": "mesa",
+      "progressMode": "unknown",
+      "desc": "Hot sun, big canyon energy. Bing Bong attempted a straight-line route and was humbled immediately."
+    },
+    {
+      "title": "BIOME ENTERED: ALPINE",
+      "loc": "Alpine",
+      "whenISO": "2026-02-18",
+      "stageKey": "alpine",
+      "progressMode": "unknown",
+      "desc": "Blizzards. Ice. Regret. Bing Bong is wearing imaginary gloves and insisting it helps."
+    },
+    {
+      "title": "BIOME ENTERED: CALDERA",
+      "loc": "Caldera",
+      "whenISO": "2026-02-22",
+      "stageKey": "caldera",
+      "progressMode": "unknown",
+      "desc": "Lava. Heat warnings. Bing Bong filed a formal complaint with the volcano."
+    },
+    {
+      "title": "CHECKPOINT: THE KILN",
+      "loc": "The Kiln",
+      "whenISO": "2026-02-25",
+      "stageKey": "kiln",
+      "progressMode": "unknown",
+      "desc": "Everything is on fire conceptually. Bing Bong is now spiritually toasted."
+    },
+    {
+      "title": "SUMMIT: THE PEAK",
+      "loc": "The Peak",
+      "whenISO": "2026-03-01",
+      "whenLabel": "Feb 29 (???)",
+      "stageKey": "peak",
+      "progressMode": "fixed",
+      "progressValue": 90,
+      "desc": "Summit reached. Flare logic engaged. Bing Bong posed heroically in wind (real or imagined)."
+    },
+    {
+      "title": "EXTRACTION IN PROGRESS",
+      "loc": "Rescue Helicopter Airspace",
       "whenISO": "2026-03-02",
-      "desc": "Flare launched. Bing Bong poses heroically in the wind (imaginary wind)."
+      "stageKey": "extraction",
+      "progressMode": "fixed",
+      "progressValue": 95,
+      "desc": "Helicopter inbound. Bing Bong is acting calm, but his stitching is lying."
     },
     {
-      "title": "DELIVERED ✅ (EST.)",
+      "title": "DELIVERED ✅",
       "loc": "Pev’s Lair",
       "whenISO": "2026-03-04",
-      "desc": "Bing Bong has arrived. He requests a warm shelf and excessive praise."
+      "stageKey": "delivered",
+      "progressMode": "fixed",
+      "progressValue": 100,
+      "desc": "Bing Bong has arrived. He requests snacks, a warm shelf, and to be praised like a tiny hero."
     }
-  ]
+  ],
+
+  "dailyUpdatePools": {
+    "dispatch": [
+      "Bing Bong tried to sign the shipping label himself. He wrote: “SCOUT”. That’s legally binding now.",
+      "Bing Bong is auditing bubble wrap like it’s a rare resource. He hoarded all of it. No regrets.",
+      "Bing Bong demanded express shipping, then remembered he doesn’t have money. He offered a pebble.",
+      "Bing Bong stared at the printer for 12 minutes straight. The printer blinked first.",
+      "Bing Bong is practicing his heroic pose for the unboxing. He is… doing his best."
+    ],
+    "shipped": [
+      "Bing Bong is in transit and yelling “WHEEEE” internally. Externally: complete plush silence.",
+      "Bing Bong has declared the parcel a ‘co-op run’. The courier did not consent.",
+      "Bing Bong attempted stamina management. He spent it all on vibes before leaving the depot."
+    ],
+    "crash": [
+      "Bing Bong has survived an aviation incident and immediately formed a union.",
+      "Bing Bong crawled from the wreckage, looked at the island, and whispered: “vertical…?”",
+      "Bing Bong is holding a pretend clipboard and blaming ‘weather’ with confidence.",
+      "Bing Bong tried to file a claim with BingBong Airlines. The island has no customer service desk.",
+      "Bing Bong discovered sand. He is now 40% sand and 60% attitude."
+    ],
+    "shore": [
+      "Bing Bong found coconuts (allegedly). He cannot open them (definitely).",
+      "Bing Bong started a campfire. Nobody knows how. Nobody questions it.",
+      "Bing Bong placed a ‘checkpoint’ that is spiritually meaningful and mechanically questionable.",
+      "Bing Bong is using the wreckage wing as a grill. Dinner is: chaos.",
+      "Bing Bong tried to recruit a crab as a party member. Negotiations failed."
+    ],
+    "tropics": [
+      "Bing Bong is sweating emotionally. The humidity is doing the rest.",
+      "Bing Bong heard jungle noises and immediately pretended to be asleep.",
+      "Bing Bong attempted stealth. He squeaked. Stealth ended.",
+      "Bing Bong is bargaining with a vine: “I hold you, you don’t betray me.”",
+      "Bing Bong found a suitcase and screamed internally like it’s legendary loot.",
+      "Bing Bong is convinced every leaf is a trap. He might be right.",
+      "Bing Bong is rating the Tropics: 2/10, too wet, not enough snacks."
+    ],
+    "roots": [
+      "Bing Bong is clinging to roots with the confidence of someone who has never met gravity properly.",
+      "Bing Bong tried to climb in a straight line. The Roots laughed.",
+      "Bing Bong is fighting wind with pure spite. The wind is winning.",
+      "Bing Bong has declared himself “Head Scout”. Nobody voted. Everyone is tired.",
+      "Bing Bong is using a root as a phone to call for help. Reception: none. Drama: infinite.",
+      "Bing Bong has discovered ‘vertical geometry’ and does not support it.",
+      "Bing Bong is whispering motivational quotes to himself. They are all threats."
+    ],
+    "mesa": [
+      "Bing Bong looked at the canyon and said: “I can make that.” He cannot.",
+      "Bing Bong tried to negotiate with the sun. The sun ignored him professionally.",
+      "Bing Bong is collecting dust like it’s an achievement badge.",
+      "Bing Bong attempted a long jump and immediately revised the plan to ‘small careful wiggles’.",
+      "Bing Bong is pretending he has sunglasses. He does not. He is still cool.",
+      "Bing Bong declared the Mesa ‘easy mode’. The Mesa took that personally.",
+      "Bing Bong wants a Scout Cannon. Bing Bong should not be trusted with a Scout Cannon."
+    ],
+    "alpine": [
+      "Bing Bong is shivering theatrically to gain sympathy buffs.",
+      "Bing Bong tried to warm up by thinking warm thoughts. He thought of snacks. It helped 0.2%.",
+      "Bing Bong is angry at snow. Snow is unbothered.",
+      "Bing Bong attempted to build a tiny snowman. It became a tiny snow tragedy.",
+      "Bing Bong is using imaginary mittens and insisting they are ‘legendary gear’.",
+      "Bing Bong declared a blizzard ‘just wind with opinions’. Bold. Incorrect.",
+      "Bing Bong is climbing ice like it owes him money."
+    ],
+    "caldera": [
+      "Bing Bong saw lava and immediately filed a complaint with the concept of heat.",
+      "Bing Bong is tiptoeing around hot rocks like a cartoon burglar.",
+      "Bing Bong asked the volcano for a ‘less spicy route’. The volcano refused.",
+      "Bing Bong invented a new strategy called “don’t be near lava”. Revolutionary.",
+      "Bing Bong is threatening the magma with strongly worded squeaks.",
+      "Bing Bong is currently experiencing ‘burning power increases’ emotionally.",
+      "Bing Bong is insisting the Caldera is ‘character building’. He is becoming a villain."
+    ],
+    "kiln": [
+      "Bing Bong is spiritually toasted and physically fine. Mentally: questionable.",
+      "Bing Bong tried to roast a marshmallow. He does not have marshmallows. He has audacity.",
+      "Bing Bong is walking like everything is hot (because it is).",
+      "Bing Bong is doing the ‘hold breath and sprint’ technique. It’s not working. He can’t breathe.",
+      "Bing Bong is chanting “up up up” like it’s a spell. It might be.",
+      "Bing Bong has accepted the Kiln as punishment for past arrogance."
+    ],
+    "peak": [
+      "Bing Bong reached the top and immediately tried to light the flare with pure confidence. It worked (somehow).",
+      "Bing Bong is posing at the summit like a tiny action hero who pays zero rent.",
+      "Bing Bong is shouting “RESCUE!” in plush silence. The universe heard him anyway.",
+      "Bing Bong is refusing to come down. He says this is his peak era.",
+      "Bing Bong looked into the horizon and said: “I forgive the plane. I don’t.”"
+    ],
+    "extraction": [
+      "Bing Bong heard rotor blades and instantly pretended he was calm the whole time.",
+      "Bing Bong is practicing a dignified rescue wave. It looks like a panic flap."
+    ],
+    "delivered": [
+      "Bing Bong has arrived and is immediately requesting snacks as payment for services rendered.",
+      "Bing Bong is now in Pev’s care. He demands praise, shelf space, and gossip.",
+      "Bing Bong is looking around like: “So… where’s the next mountain?”"
+    ],
+    "unknown": [
+      "Bing Bong is currently off-grid, gathering supplies and emotional resilience."
+    ]
+  }
 }
+
