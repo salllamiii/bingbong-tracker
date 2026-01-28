@@ -350,7 +350,7 @@ const crashDate = crashScan ? dateFromISO(crashScan.whenISO) : null;
 
 if (crashDate && now < crashDate) {
   const daysToCrash = daysBetween(now, crashDate);
-  el("etaPill").textContent = `ETA: ${daysToCrash} day(s) until incident`;
+  el("etaPill").textContent = `ETA: ${daysToCrash} day(s) until arrival`;
 } else if (crashDate && now >= crashDate) {
   el("etaPill").textContent = "ETA: ??? (signal lost)";
 } else {
