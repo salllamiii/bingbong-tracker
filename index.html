@@ -44,7 +44,6 @@
       border-radius: 999px; overflow:hidden; height: 14px; }
     .bar{ height: 100%; width: 0%; background: linear-gradient(90deg, var(--accent), var(--accent2));
       border-radius: 999px; transition: width .6s ease; }
-    /* Mystery bar animation for ???% */
     .bar.unknown{
       width: 65% !important;
       background: linear-gradient(90deg, rgba(255,255,255,.15), rgba(124,92,255,.35), rgba(39,216,167,.25), rgba(255,255,255,.12));
@@ -71,7 +70,6 @@
     .scanTitle{ font-weight:900; }
     .scanMeta{ color: var(--muted); font-size:12px; margin-top:2px; }
     .scanDesc{ margin-top:6px; color: #eef0ff; line-height:1.4; }
-
     .tiny{ font-size:12px; color: var(--muted); margin-top:10px; }
     .footerNote{ text-align:center; color: rgba(255,255,255,.6); font-size:12px; margin-top:10px; }
   </style>
@@ -97,7 +95,7 @@
       <div class="entry" style="margin-top:10px;">
         <div class="entryTop">
           <div class="place" id="currentPlace">Latest scan: —</div>
-          <div class="when" id="countdown">—</div>
+          <div class="when" id="countdown"></div>
         </div>
         <p class="msg" id="currentMsg">—</p>
         <div class="progressBox" aria-label="progress">
@@ -114,7 +112,7 @@
       </div>
     </div>
 
-    <!-- RIGHT PANEL: DAILY UPDATE -->
+    <!-- RIGHT PANEL -->
     <div class="card">
       <h2>🗞️ Daily Bing Bong Report</h2>
       <p class="sub" id="dailyMeta">Loading today’s report…</p>
@@ -122,17 +120,13 @@
         <div class="place" id="dailyTitle">Today:</div>
         <p class="msg" id="dailyMsg">—</p>
       </div>
-      <div class="tiny" id="dailyFoot">One report per day. All thanks to Marcin's psychic abilities.</div>
+      <div class="tiny" id="dailyFoot">One report per day. Time is “random” because Bing Bong refuses schedules.</div>
     </div>
   </div>
 
 <script>
 const el = (id) => document.getElementById(id);
 
-function isoToday(){
-  const d = new Date(); d.setHours(12,0,0,0);
-  return d.toISOString().slice(0,10);
-}
 function dateFromISO(iso){
   if(!iso) return null;
   const d = new Date(iso + "T12:00:00");
@@ -144,20 +138,43 @@ function niceDate(iso){
   return d.toLocaleDateString(undefined, { year:"numeric", month:"short", day:"numeric" });
 }
 function clamp(n,a,b){ return Math.max(a, Math.min(b, n)); }
-function daysBetween(a,b){
-  const ms = (b - a);
-  return Math.round(ms / (1000*60*60*24));
-}
-function addDaysISO(iso, days){
-  const d = dateFromISO(iso);
-  if(!d) return "";
-  d.setDate(d.getDate() + Number(days||0));
-  return d.toISOString().slice(0,10);
-}
 function escapeHtml(str){
   return String(str)
     .replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;")
     .replaceAll('"',"&quot;").replaceAll("'","&#039;");
+}
+
+// UK time helpers
+function getUKNowParts(){
+  const parts = new Intl.DateTimeFormat("en-GB", {
+    timeZone: "Europe/London",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false
+  }).formatToParts(new Date());
+
+  const map = {};
+  for (const p of parts) map[p.type] = p.value;
+
+  return {
+    y: Number(map.year),
+    m: Number(map.month),
+    d: Number(map.day),
+    hh: Number(map.hour),
+    mm: Number(map.minute)
+  };
+}
+function ukISODate(){
+  const p = getUKNowParts();
+  const pad = (n) => String(n).padStart(2, "0");
+  return `${p.y}-${pad(p.m)}-${pad(p.d)}`;
+}
+function timeToMinutes(t){
+  const [h, m] = String(t || "00:00").split(":").map(Number);
+  return (Number.isFinite(h) ? h : 0) * 60 + (Number.isFinite(m) ? m : 0);
 }
 
 // stable fake tracking number
@@ -179,52 +196,42 @@ function makeTrackingNumber(data){
   return `${prefix}-${name}-${y}${m}-${h}`;
 }
 
-function effectiveArrivalISO(d){
-  if(d.arrivalDate) return d.arrivalDate;
-  if(d.shipmentDate && d.deliveryWindowDays){
-    return addDaysISO(d.shipmentDate, Number(d.deliveryWindowDays));
-  }
-  return "";
-}
-
 async function loadData(){
   const res = await fetch(`./data.json?v=${Date.now()}`, { cache: "no-store" });
   if(!res.ok) throw new Error("Could not load data.json");
   return await res.json();
 }
 
-function computeProgressDefault(d){
-  // fallback only (we will override with scan-specific progress rules)
-  const now = new Date();
-  const start = dateFromISO(d.orderDate) || dateFromISO(d.shipmentDate) || new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  const arrivalISO = effectiveArrivalISO(d) || addDaysISO(d.shipmentDate || isoToday(), d.deliveryWindowDays || 10);
-  const end = dateFromISO(arrivalISO) || new Date(start.getTime() + 30*24*3600*1000);
-
-  const total = Math.max(1, end - start);
-  const done = clamp(now - start, 0, total);
-  const pct = clamp(done / total, 0, 1);
-  return { now, arrivalISO, pct };
-}
-
-function scansThatHaveHappened(d, now){
-  const scans = Array.isArray(d.scans) ? d.scans.slice() : [];
-  return scans
-    .filter(s => {
-      const t = dateFromISO(s.whenISO);
-      return t && t <= now;
-    })
-    .sort((a,b) => {
-  const da = dateFromISO(a.whenISO) - dateFromISO(b.whenISO);
-  if (da !== 0) return da;
-  const oa = Number(a.order ?? 0);
-  const ob = Number(b.order ?? 0);
-  return oa - ob;
-});
-}
-
 function scanDisplayDate(s){
   if(s.whenLabel && String(s.whenLabel).trim()) return s.whenLabel;
   return niceDate(s.whenISO);
+}
+
+function scansThatHaveHappened(d){
+  const scans = Array.isArray(d.scans) ? d.scans.slice() : [];
+
+  const todayUK = ukISODate();
+  const nowUK = getUKNowParts();
+  const nowMin = nowUK.hh * 60 + nowUK.mm;
+
+  return scans
+    .filter(s => {
+      if (!s.whenISO) return false;
+
+      if (s.whenISO < todayUK) return true;
+      if (s.whenISO > todayUK) return false;
+
+      // same UK day: unlock only after whenTime
+      const unlockMin = timeToMinutes(s.whenTime);
+      return nowMin >= unlockMin;
+    })
+    .sort((a,b) => {
+      const da = dateFromISO(a.whenISO) - dateFromISO(b.whenISO);
+      if (da !== 0) return da;
+      const oa = Number(a.order ?? 0);
+      const ob = Number(b.order ?? 0);
+      return oa - ob;
+    });
 }
 
 function renderTimeline(pastScans){
@@ -257,7 +264,7 @@ function renderTimeline(pastScans){
   });
 }
 
-// Deterministic daily randomness (so it changes daily but doesn’t “jump” on refresh)
+// Deterministic daily randomness
 function hashStr(str){
   let h = 2166136261 >>> 0;
   for (let i=0;i<str.length;i++){
@@ -277,54 +284,14 @@ function pickDaily(pool, seedStr){
   return pool[idx];
 }
 function pseudoRandomTime(seedStr){
-  // 08:05–21:55
   const hh = dailyRandomInt(seedStr + "|h", 8, 21);
   const mm = dailyRandomInt(seedStr + "|m", 0, 11) * 5;
   const pad = (n) => String(n).padStart(2,"0");
   return `${pad(hh)}:${pad(mm)}`;
 }
-
 function stageKeyFromLatestScan(latestScan){
   return (latestScan && latestScan.stageKey) ? String(latestScan.stageKey) : "unknown";
 }
-
-function applyProgressFromScan(latestScan, d){
-  const bar = el("bar");
-
-  // defaults
-  let label = "Progress: —";
-  let barMode = "fixed";
-  let pct100 = 0;
-
-  if(latestScan && latestScan.progressMode){
-    const mode = String(latestScan.progressMode);
-    if(mode === "fixed"){
-      pct100 = clamp(Number(latestScan.progressValue ?? 0), 0, 100);
-      label = `Progress: ${pct100}%`;
-      barMode = "fixed";
-    } else if(mode === "unknown"){
-      label = `Progress: ???%`;
-      barMode = "unknown";
-    }
-  } else {
-    // fallback
-    const { pct } = computeProgressDefault(d);
-    pct100 = Math.round(pct * 100);
-    label = `Progress: ${pct100}%`;
-    barMode = "fixed";
-  }
-
-  el("progressPill").textContent = label;
-
-  // render bar
-  bar.classList.remove("unknown");
-  if(barMode === "unknown"){
-    bar.classList.add("unknown");
-  } else {
-    bar.style.width = `${pct100}%`;
-  }
-}
-
 function renderDailyUpdate(d, stageKey, todayISO, latestScan){
   const pools = d.dailyUpdatePools || {};
   const pool = pools[stageKey] || pools["unknown"] || [];
@@ -339,94 +306,104 @@ function renderDailyUpdate(d, stageKey, todayISO, latestScan){
   el("dailyMsg").textContent = msg;
 }
 
-function render(d){
-  const now = new Date();
-  const todayISO = isoToday();
-  const past = scansThatHaveHappened(d, now);
+function applyProgressFromScan(latestScan){
+  const bar = el("bar");
 
-  el("subtitle").textContent =
-    `Mission: deliver Bing Bong to ${d.friendName || "Pev"}. Birthday: ${niceDate(d.birthdayDate)}.`;
+  let label = "Progress: —";
+  let barMode = "fixed";
+  let pct100 = 0;
 
-  el("trackingPill").textContent = `Tracking: ${makeTrackingNumber(d)}`;
+  if(latestScan && latestScan.progressMode){
+    const mode = String(latestScan.progressMode);
+    if(mode === "fixed"){
+      pct100 = clamp(Number(latestScan.progressValue ?? 0), 0, 100);
+      label = `Progress: ${pct100}%`;
+      barMode = "fixed";
+    } else if(mode === "unknown"){
+      label = `Progress: ???%`;
+      barMode = "unknown";
+    }
+  }
 
-  const arrivalISO = effectiveArrivalISO(d);
-  // --- Fake ETA: countdown to crash, then ??? ---
-const crashScan = (Array.isArray(d.scans) ? d.scans : []).find(s => String(s.stageKey) === "crash");
-const crashDate = crashScan ? dateFromISO(crashScan.whenISO) : null;
+  el("progressPill").textContent = label;
 
-if (crashDate && now < crashDate) {
-  const daysToCrash = daysBetween(now, crashDate);
-  el("etaPill").textContent = `ETA: ${daysToCrash} day(s) until arrival`;
-} else if (crashDate && now >= crashDate) {
-  el("etaPill").textContent = "ETA: ??? (signal lost)";
-} else {
-  el("etaPill").textContent = "ETA: Bing Bong-time";
+  bar.classList.remove("unknown");
+  if(barMode === "unknown"){
+    bar.classList.add("unknown");
+  } else {
+    bar.style.width = `${pct100}%`;
+  }
 }
 
+function render(d){
+  const todayISO = ukISODate();
+  const past = scansThatHaveHappened(d);
 
-  // status + countdown
-  const arrival = arrivalISO ? dateFromISO(arrivalISO) : null;
-  const ship = d.shipmentDate ? dateFromISO(d.shipmentDate) : null;
+  el("subtitle").textContent = `Mission: deliver Bing Bong to ${d.friendName || "Pev"}. Birthday: ${niceDate(d.birthdayDate)}.`;
+  el("trackingPill").textContent = `Tracking: ${makeTrackingNumber(d)}`;
 
-  let countdown = "—";
-  if(arrival){
-    const diff = daysBetween(now, arrival);
-    countdown = diff > 0 ? `${diff} day(s) until arrival` : (diff === 0 ? "Arrival day!" : `Arrived ${Math.abs(diff)} day(s) ago`);
-  } else if(ship){
-    const ds = daysBetween(now, ship);
-    countdown = ds > 0 ? `${ds} day(s) until shipment` : (ds === 0 ? "Ships today (allegedly)" : `Shipped ${Math.abs(ds)} day(s) ago`);
+  // Fake ETA: countdown to crash (by date only), then ??? after crash
+  const crashScan = (Array.isArray(d.scans) ? d.scans : []).find(s => String(s.stageKey) === "crash");
+  const crashISO = crashScan ? crashScan.whenISO : null;
+
+  if(crashISO && todayISO < crashISO){
+    // date-only countdown
+    const t0 = dateFromISO(todayISO);
+    const t1 = dateFromISO(crashISO);
+    const daysToCrash = Math.max(0, Math.round((t1 - t0) / (1000*60*60*24)));
+    el("etaPill").textContent = `ETA: ${daysToCrash} day(s) until incident`;
+  } else if(crashISO && todayISO >= crashISO){
+    el("etaPill").textContent = "ETA: ??? (signal lost)";
+  } else {
+    el("etaPill").textContent = "ETA: Bing Bong-time";
   }
-  el("countdown").textContent = "ETA: maybe soon, maybe no";
 
-  const delivered = arrival ? (now >= arrival) : false;
-  const preShip = ship ? (now < ship) : false;
+  // No "days until arrival" line (leave blank)
+  el("countdown").textContent = "";
+
+  // status (based on whether Delivered scan has unlocked yet)
+  const latest = past.length > 0 ? past[past.length - 1] : null;
+  const stage = stageKeyFromLatestScan(latest);
+
+  const delivered = stage === "delivered";
+  const preShip = (todayISO < (d.shipmentDate || "0000-00-00"));
 
   el("statusPill").textContent = `Status: ${delivered ? "Delivered ✅" : (preShip ? "Preparing for Dispatch" : "In Transit")}`;
   el("statusPill").className = delivered ? "pill ok" : (preShip ? "pill warn" : "pill ok");
 
-  // birthday banner if late
-  const bday = dateFromISO(d.birthdayDate);
+  // birthday banner (late vs birthday)
+  const bday = d.birthdayDate;
   const banner = el("birthdayBanner");
   const pill = el("birthdayPill");
-  if(bday && arrival){
-    const late = arrival > bday;
-    if(late){
+
+  // if delivered already: hide banner
+  if(delivered){
+    pill.style.display = "none";
+    banner.style.display = "none";
+  } else {
+    // show birthday banner only on/after birthday (fun)
+    if(todayISO === bday){
       pill.style.display = "";
       banner.style.display = "";
-      const diff = daysBetween(now, bday);
-      banner.textContent =
-        diff > 0 ? `⚠️ Birthday in ${diff} day(s). Bing Bong is sending emergency birthday vibes from a mysterious island.`
-        : diff === 0 ? `🎂 It’s Pev’s birthday TODAY. Bing Bong performed a ceremonial squeak and promised he’s “basically arriving spiritually.”`
-        : `😭 Bing Bong is late by ${Math.abs(diff)} day(s). He claims the island is “logistically complicated” and “full of cardio.”`;
+      banner.textContent = "🎂 It’s Pev’s birthday TODAY. Bing Bong performed a ceremonial squeak and promised he’s ‘basically arriving spiritually.’";
     } else {
       pill.style.display = "none";
       banner.style.display = "none";
     }
-  } else {
-    pill.style.display = "none";
-    banner.style.display = "none";
   }
 
-  // latest scan display + progress override
-  if(past.length > 0){
-    const latest = past[past.length - 1];
+  // latest scan display + progress
+  if(latest){
     el("currentPlace").textContent = `Latest scan: ${latest.title || "SCAN"}`;
     el("currentMsg").textContent = `${latest.loc || "Unknown"} — ${scanDisplayDate(latest)}. ${latest.desc || ""}`;
-
-    applyProgressFromScan(latest, d);
-
-    // daily update (stage-relevant)
-    const stageKey = stageKeyFromLatestScan(latest);
-    renderDailyUpdate(d, stageKey, todayISO, latest);
+    applyProgressFromScan(latest);
+    renderDailyUpdate(d, stage, todayISO, latest);
   } else {
     el("currentPlace").textContent = "Latest scan: Pending";
     el("currentMsg").textContent = "Bing Bong is currently off-grid, gathering supplies and emotional resilience.";
-
-    // progress fallback
     el("progressPill").textContent = "Progress: 0%";
     el("bar").classList.remove("unknown");
     el("bar").style.width = "0%";
-
     renderDailyUpdate(d, "unknown", todayISO, null);
   }
 
@@ -440,8 +417,7 @@ if (crashDate && now < crashDate) {
     render(d);
   }catch(e){
     el("subtitle").textContent = "Couldn’t load data.json 😭";
-    el("currentMsg").textContent =
-      "If you’re seeing this on GitHub Pages, make sure data.json exists in the repo root alongside index.html.";
+    el("currentMsg").textContent = "Make sure data.json exists in the repo root alongside index.html.";
   }
 })();
 </script>
