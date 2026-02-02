@@ -213,7 +213,13 @@ function scansThatHaveHappened(d, now){
       const t = dateFromISO(s.whenISO);
       return t && t <= now;
     })
-    .sort((a,b) => (dateFromISO(a.whenISO) - dateFromISO(b.whenISO)));
+    .sort((a,b) => {
+  const da = dateFromISO(a.whenISO) - dateFromISO(b.whenISO);
+  if (da !== 0) return da;
+  const oa = Number(a.order ?? 0);
+  const ob = Number(b.order ?? 0);
+  return oa - ob;
+});
 }
 
 function scanDisplayDate(s){
