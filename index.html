@@ -147,13 +147,7 @@ function getUKNowParts(){
   const map = {};
   for (const p of parts) map[p.type] = p.value;
 
-  return {
-    y: Number(map.year),
-    m: Number(map.month),
-    d: Number(map.day),
-    hh: Number(map.hour),
-    mm: Number(map.minute)
-  };
+  return { y:+map.year, m:+map.month, d:+map.day, hh:+map.hour, mm:+map.minute };
 }
 function ukISODate(){
   const p = getUKNowParts();
@@ -196,7 +190,6 @@ function scanDisplayDate(s){
 
 function scansThatHaveHappened(d){
   const scans = Array.isArray(d.scans) ? d.scans.slice() : [];
-
   const todayUK = ukISODate();
   const nowUK = getUKNowParts();
   const nowMin = nowUK.hh * 60 + nowUK.mm;
@@ -204,19 +197,14 @@ function scansThatHaveHappened(d){
   return scans
     .filter(s => {
       if (!s.whenISO) return false;
-
       if (s.whenISO < todayUK) return true;
       if (s.whenISO > todayUK) return false;
-
-      const unlockMin = timeToMinutes(s.whenTime);
-      return nowMin >= unlockMin;
+      return nowMin >= timeToMinutes(s.whenTime);
     })
     .sort((a,b) => {
       const da = dateFromISO(a.whenISO) - dateFromISO(b.whenISO);
       if (da !== 0) return da;
-      const oa = Number(a.order ?? 0);
-      const ob = Number(b.order ?? 0);
-      return oa - ob;
+      return Number(a.order ?? 0) - Number(b.order ?? 0);
     });
 }
 
@@ -249,6 +237,7 @@ function renderTimeline(pastScans){
   });
 }
 
+// Deterministic daily randomness
 function hashStr(str){
   let h = 2166136261 >>> 0;
   for (let i=0;i<str.length;i++){
@@ -264,8 +253,7 @@ function dailyRandomInt(seedStr, min, max){
 }
 function pickDaily(pool, seedStr){
   if(!pool || pool.length === 0) return "Bing Bong is currently buffering.";
-  const idx = dailyRandomInt(seedStr, 0, pool.length - 1);
-  return pool[idx];
+  return pool[dailyRandomInt(seedStr, 0, pool.length - 1)];
 }
 function pseudoRandomTime(seedStr){
   const hh = dailyRandomInt(seedStr + "|h", 8, 21);
@@ -281,7 +269,6 @@ function renderDailyUpdate(d, stageKey, todayISO, latestScan){
   const pool = pools[stageKey] || pools["unknown"] || [];
   const seed = `${todayISO}|${stageKey}|${d.friendName || ""}|bingbong`;
   const time = pseudoRandomTime(seed);
-
   const msg = pickDaily(pool, seed);
   const where = latestScan ? (latestScan.loc || latestScan.title || "Somewhere") : "Somewhere off-grid";
 
@@ -292,7 +279,6 @@ function renderDailyUpdate(d, stageKey, todayISO, latestScan){
 
 function applyProgressFromScan(latestScan){
   const bar = el("bar");
-
   let label = "Progress: —";
   let barMode = "fixed";
   let pct100 = 0;
@@ -304,13 +290,12 @@ function applyProgressFromScan(latestScan){
       label = `Progress: ${pct100}%`;
       barMode = "fixed";
     } else if(mode === "unknown"){
-      label = `Progress: ???%`;
+      label = "Progress: ???%";
       barMode = "unknown";
     }
   }
 
   el("progressPill").textContent = label;
-
   bar.classList.remove("unknown");
   if(barMode === "unknown"){
     bar.classList.add("unknown");
@@ -326,28 +311,33 @@ function render(d){
   el("subtitle").textContent = `Mission: deliver Bing Bong to ${d.friendName || "Pev"}. Birthday: ${niceDate(d.birthdayDate)}.`;
   el("trackingPill").textContent = `Tracking: ${makeTrackingNumber(d)}`;
 
-  const crashScan = (Array.isArray(d.scans) ? d.scans : []).find(s => String(s.stageKey) === "crash");
-  const crashISO = crashScan ? crashScan.whenISO : null;
-
-  if(crashISO && todayISO < crashISO){
-    const t0 = dateFromISO(todayISO);
-    const t1 = dateFromISO(crashISO);
-    const daysToCrash = Math.max(0, Math.round((t1 - t0) / (1000*60*60*24)));
-    el("etaPill").textContent = `ETA: ${daysToCrash} day(s) until incident`;
-  } else if(crashISO && todayISO >= crashISO){
-    el("etaPill").textContent = "ETA: ??? (signal lost)";
-  } else {
-    el("etaPill").textContent = "ETA: Bing Bong-time";
-  }
-
   el("countdown").textContent = "";
 
   const latest = past.length > 0 ? past[past.length - 1] : null;
   const stage = stageKeyFromLatestScan(latest);
-
   const delivered = stage === "delivered";
-  const preShip = (todayISO < (d.shipmentDate || "0000-00-00"));
 
+  // 🔥 ETA PILL (tweaked):
+  // - If Delivered has unlocked: victory line
+  // - Else if crash has happened: ??? signal lost
+  // - Else: countdown to crash (date-only)
+  const crashScan = (Array.isArray(d.scans) ? d.scans : []).find(s => String(s.stageKey) === "crash");
+  const crashISO = crashScan ? crashScan.whenISO : null;
+
+  if(delivered){
+    el("etaPill").textContent = "ETA: COMPLETED (Bing Bong victorious)";
+  } else if(crashISO && todayISO >= crashISO){
+    el("etaPill").textContent = "ETA: ??? (signal lost)";
+  } else if(crashISO && todayISO < crashISO){
+    const t0 = dateFromISO(todayISO);
+    const t1 = dateFromISO(crashISO);
+    const daysToCrash = Math.max(0, Math.round((t1 - t0) / (1000*60*60*24)));
+    el("etaPill").textContent = `ETA: ${daysToCrash} day(s) until incident`;
+  } else {
+    el("etaPill").textContent = "ETA: Bing Bong-time";
+  }
+
+  const preShip = (todayISO < (d.shipmentDate || "0000-00-00"));
   el("statusPill").textContent = `Status: ${delivered ? "Delivered ✅" : (preShip ? "Preparing for Dispatch" : "In Transit")}`;
   el("statusPill").className = delivered ? "pill ok" : (preShip ? "pill warn" : "pill ok");
 
@@ -362,7 +352,7 @@ function render(d){
     if(todayISO === bday){
       pill.style.display = "";
       banner.style.display = "";
-      banner.textContent = "🎂 It’s Pev’s birthday TODAY. Bing Bong performed a ceremonial squeak and promised he was ‘basically arriving spiritually.’";
+      banner.textContent = "🎂 It’s Pev’s birthday TODAY. Bing Bong performed a ceremonial squeak and promised he was basically arriving spiritually.";
     } else {
       pill.style.display = "none";
       banner.style.display = "none";
@@ -391,7 +381,7 @@ function render(d){
     const d = await loadData();
     render(d);
   }catch(e){
-    el("subtitle").textContent = "Couldn’t load data.json 😭";
+    el("subtitle").textContent = "Couldn’t load data.json 😭/npm";
     el("currentMsg").textContent = "Make sure data.json exists in the repo root alongside index.html.";
   }
 })();
