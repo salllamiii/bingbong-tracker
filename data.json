@@ -147,8 +147,8 @@
       "title": "DELIVERED ✅",
       "loc": "Pev’s Lair",
       "whenISO": "2026-02-04",
-      "whenTime": "18:00",
-      "whenLabel": "Feb 4 • End of day",
+      "whenTime": "18:30",
+      "whenLabel": "Feb 4 • 18:30",
       "order": 100,
       "stageKey": "delivered",
       "progressMode": "fixed",
@@ -249,5 +249,3 @@
     ]
   }
 }
-
-
