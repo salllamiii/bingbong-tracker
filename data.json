@@ -3,8 +3,8 @@
   "birthdayDate": "2026-01-29",
   "orderDate": "2026-01-28",
   "shipmentDate": "2026-01-30",
-  "deliveryWindowDays": 5,
-  "arrivalDate": "2026-02-04",
+  "deliveryWindowDays": 4,
+  "arrivalDate": "2026-02-03",
   "trackingPrefix": "BB",
 
   "scans": [
@@ -24,7 +24,7 @@
       "stageKey": "shipped",
       "progressMode": "fixed",
       "progressValue": 50,
-      "desc": "Parcel departed. Bing Bong yelled “WE RIDE!” and immediately regretted it."
+      "desc": "Parcel departed. Bing Bong yelled WE RIDE! and immediately regretted it."
     },
     {
       "title": "INCIDENT: PLANE CRASH",
@@ -40,7 +40,7 @@
       "whenISO": "2026-02-02",
       "stageKey": "shore",
       "progressMode": "unknown",
-      "desc": "Bing Bong declared a “short rest”. Everyone complied. Nobody remembers voting."
+      "desc": "Bing Bong declared a short rest. Everyone complied. Nobody remembers voting."
     },
 
     {
@@ -58,8 +58,8 @@
       "title": "SPEEDRUN ENGAGED: ROOTS",
       "loc": "Roots",
       "whenISO": "2026-02-03",
-      "whenTime": "10:03",
-      "whenLabel": "Feb 3 • 10:03",
+      "whenTime": "09:30",
+      "whenLabel": "Feb 3 • 09:30",
       "order": 20,
       "stageKey": "roots",
       "progressMode": "unknown",
@@ -69,8 +69,8 @@
       "title": "SPEEDRUN ENGAGED: MESA",
       "loc": "Mesa",
       "whenISO": "2026-02-03",
-      "whenTime": "12:44",
-      "whenLabel": "Feb 3 • 12:44",
+      "whenTime": "11:00",
+      "whenLabel": "Feb 3 • 11:00",
       "order": 30,
       "stageKey": "mesa",
       "progressMode": "unknown",
@@ -80,8 +80,8 @@
       "title": "SPEEDRUN ENGAGED: ALPINE",
       "loc": "Alpine",
       "whenISO": "2026-02-03",
-      "whenTime": "15:19",
-      "whenLabel": "Feb 3 • 15:19",
+      "whenTime": "12:30",
+      "whenLabel": "Feb 3 • 12:30",
       "order": 40,
       "stageKey": "alpine",
       "progressMode": "unknown",
@@ -91,8 +91,8 @@
       "title": "SPEEDRUN ENGAGED: CALDERA",
       "loc": "Caldera",
       "whenISO": "2026-02-03",
-      "whenTime": "17:06",
-      "whenLabel": "Feb 3 • 17:06",
+      "whenTime": "14:00",
+      "whenLabel": "Feb 3 • 14:00",
       "order": 50,
       "stageKey": "caldera",
       "progressMode": "unknown",
@@ -102,8 +102,8 @@
       "title": "CHECKPOINT: THE KILN (ANY% WR)",
       "loc": "The Kiln",
       "whenISO": "2026-02-03",
-      "whenTime": "19:41",
-      "whenLabel": "Feb 3 • 19:41",
+      "whenTime": "15:30",
+      "whenLabel": "Feb 3 • 15:30",
       "order": 60,
       "stageKey": "kiln",
       "progressMode": "unknown",
@@ -113,20 +113,20 @@
       "title": "SUMMIT: THE PEAK (SPEEDRUN CLEAR)",
       "loc": "The Peak",
       "whenISO": "2026-02-03",
-      "whenTime": "22:02",
-      "whenLabel": "Feb 3 • 22:02",
+      "whenTime": "16:10",
+      "whenLabel": "Feb 3 • 16:10",
       "order": 70,
       "stageKey": "peak",
       "progressMode": "unknown",
-      "desc": "Summit reached in one day. Bing Bong lit the flare and whispered: gg ez. The mountain cried."
+      "desc": "Summit reached. Bing Bong lit the flare and whispered gg ez. The mountain cried."
     },
 
     {
       "title": "EXTRACTION IN PROGRESS",
       "loc": "Rescue Airspace",
-      "whenISO": "2026-02-04",
-      "whenTime": "10:30",
-      "whenLabel": "Feb 4 • 10:30",
+      "whenISO": "2026-02-03",
+      "whenTime": "17:00",
+      "whenLabel": "Feb 3 • 17:00",
       "order": 80,
       "stageKey": "extraction",
       "progressMode": "unknown",
@@ -135,60 +135,60 @@
     {
       "title": "OUT FOR DELIVERY",
       "loc": "Courier Vehicle (Zoomies)",
-      "whenISO": "2026-02-04",
-      "whenTime": "16:10",
-      "whenLabel": "Feb 4 • 16:10",
+      "whenISO": "2026-02-03",
+      "whenTime": "18:05",
+      "whenLabel": "Feb 3 • 18:05",
       "order": 90,
       "stageKey": "shipped",
       "progressMode": "unknown",
-      "desc": "Bing Bong is in a van and acting like it’s a boss fight."
+      "desc": "Bing Bong is in a van and acting like it is a boss fight."
     },
     {
       "title": "DELIVERED ✅",
       "loc": "Pev’s Lair",
-      "whenISO": "2026-02-04",
+      "whenISO": "2026-02-03",
       "whenTime": "18:30",
-      "whenLabel": "Feb 4 • 18:30",
+      "whenLabel": "Feb 3 • 18:30",
       "order": 100,
       "stageKey": "delivered",
       "progressMode": "fixed",
       "progressValue": 100,
-      "desc": "Bing Bong has arrived early. He requests snacks, shelf space, and to be praised like a tiny hero."
+      "desc": "Bing Bong has arrived. He requests snacks, shelf space, and to be praised like a tiny hero."
     }
   ],
 
   "dailyUpdatePools": {
     "dispatch": [
-      "Bing Bong tried to sign the shipping label himself. He wrote: “SCOUT”. That’s legally binding now.",
-      "Bing Bong is auditing bubble wrap like it’s a rare resource. He hoarded all of it. No regrets.",
-      "Bing Bong demanded express shipping, then remembered he doesn’t have money. He offered a pebble.",
+      "Bing Bong tried to sign the shipping label himself. He wrote: SCOUT. That is legally binding now.",
+      "Bing Bong is auditing bubble wrap like it is a rare resource. He hoarded all of it. No regrets.",
+      "Bing Bong demanded express shipping, then remembered he does not have money. He offered a pebble.",
       "Bing Bong stared at the printer for 12 minutes straight. The printer blinked first.",
-      "Bing Bong is practicing his heroic pose for the unboxing. He is… doing his best."
+      "Bing Bong is practicing his heroic pose for the unboxing. He is doing his best."
     ],
     "shipped": [
-      "Bing Bong is in transit and yelling “WHEEEE” internally. Externally: complete plush silence.",
-      "Bing Bong has declared the parcel a ‘co-op run’. The courier did not consent.",
+      "Bing Bong is in transit and yelling WHEEEE internally. Externally: complete plush silence.",
+      "Bing Bong has declared the parcel a co-op run. The courier did not consent.",
       "Bing Bong attempted stamina management. He spent it all on vibes before leaving the depot.",
-      "Bing Bong has entered “van fast travel”. There is no seatbelt for plushies. He is thriving."
+      "Bing Bong has entered van fast travel. There is no seatbelt for plushies. He is thriving."
     ],
     "crash": [
       "Bing Bong has survived an aviation incident and immediately formed a union.",
-      "Bing Bong crawled from the wreckage, looked at the island, and whispered: “vertical…?”",
-      "Bing Bong is holding a pretend clipboard and blaming ‘weather’ with confidence.",
+      "Bing Bong crawled from the wreckage, looked at the island, and whispered: vertical...?",
+      "Bing Bong is holding a pretend clipboard and blaming weather with confidence.",
       "Bing Bong tried to file a claim with BingBong Airlines. The island has no customer service desk.",
       "Bing Bong discovered sand. He is now 40% sand and 60% attitude."
     ],
     "shore": [
       "Bing Bong found coconuts (allegedly). He cannot open them (definitely).",
       "Bing Bong started a campfire. Nobody knows how. Nobody questions it.",
-      "Bing Bong placed a ‘checkpoint’ that is spiritually meaningful and mechanically questionable.",
+      "Bing Bong placed a checkpoint that is spiritually meaningful and mechanically questionable.",
       "Bing Bong is using the wreckage wing as a grill. Dinner is: chaos.",
       "Bing Bong tried to recruit a crab as a party member. Negotiations failed."
     ],
     "tropics": [
       "Bing Bong is sweating emotionally. The humidity is doing the rest.",
       "Bing Bong attempted stealth. He squeaked. Stealth ended.",
-      "Bing Bong found a suitcase and screamed internally like it’s legendary loot.",
+      "Bing Bong found a suitcase and screamed internally like it is legendary loot.",
       "Bing Bong is convinced every leaf is a trap. He might be right.",
       "Bing Bong is doing a speedrun and the jungle is losing."
     ],
@@ -201,48 +201,48 @@
     ],
     "mesa": [
       "Bing Bong tried to negotiate with the sun. The sun ignored him professionally.",
-      "Bing Bong is collecting dust like it’s an achievement badge.",
-      "Bing Bong attempted a long jump and immediately revised the plan to ‘small careful wiggles’.",
-      "Bing Bong declared the Mesa ‘easy mode’. The Mesa took that personally.",
+      "Bing Bong is collecting dust like it is an achievement badge.",
+      "Bing Bong attempted a long jump and immediately revised the plan to small careful wiggles.",
+      "Bing Bong declared the Mesa easy mode. The Mesa took that personally.",
       "Bing Bong is speedrunning canyon physics. Canyon physics is unimpressed."
     ],
     "alpine": [
       "Bing Bong is angry at snow. Snow is unbothered.",
-      "Bing Bong is using imaginary mittens and insisting they are ‘legendary gear’.",
-      "Bing Bong declared a blizzard ‘just wind with opinions’. Bold. Incorrect.",
+      "Bing Bong is using imaginary mittens and insisting they are legendary gear.",
+      "Bing Bong declared a blizzard just wind with opinions. Bold. Incorrect.",
       "Bing Bong is climbing ice like it owes him money.",
       "Bing Bong has achieved cold immunity via delusion and momentum."
     ],
     "caldera": [
       "Bing Bong saw lava and immediately filed a complaint with the concept of heat.",
-      "Bing Bong invented a new strategy called “don’t be near lava”. Revolutionary.",
+      "Bing Bong invented a new strategy called do not be near lava. Revolutionary.",
       "Bing Bong is threatening the magma with strongly worded squeaks.",
       "Bing Bong is insisting the Caldera is character building. He is becoming a villain.",
       "Bing Bong is speedrunning molten regret and somehow winning."
     ],
     "kiln": [
       "Bing Bong is spiritually toasted and physically fine. Mentally: questionable.",
-      "Bing Bong is doing the hold breath and sprint technique. It’s not working. He can’t breathe.",
-      "Bing Bong is chanting “up up up” like it’s a spell. It might be.",
+      "Bing Bong is chanting up up up like it is a spell. It might be.",
       "Bing Bong has accepted the Kiln as punishment for past arrogance.",
-      "Bing Bong is currently too fast to be cooked. He has transcended heat."
+      "Bing Bong is currently too fast to be cooked. He has transcended heat.",
+      "Bing Bong is sprinting so hard the fire is scared of him."
     ],
     "peak": [
       "Bing Bong reached the top and immediately tried to light the flare with pure confidence. It worked (somehow).",
       "Bing Bong is posing at the summit like a tiny action hero who pays zero rent.",
       "Bing Bong is refusing to come down. He says this is his peak era.",
-      "Bing Bong looked into the horizon and said: “I forgive the plane. I don’t.”",
+      "Bing Bong looked into the horizon and said: I forgive the plane. I do not.",
       "Bing Bong just did a full island speedrun. The mountain is in witness protection."
     ],
     "extraction": [
       "Bing Bong heard rotor blades and instantly pretended he was calm the whole time.",
       "Bing Bong is practicing a dignified rescue wave. It looks like a panic flap.",
-      "Bing Bong is being airlifted like a celebrity who definitely didn’t cause any incidents."
+      "Bing Bong is being airlifted like a celebrity who definitely did not cause any incidents."
     ],
     "delivered": [
       "Bing Bong has arrived and is immediately requesting snacks as payment for services rendered.",
       "Bing Bong is now in Pev’s care. He demands praise, shelf space, and gossip.",
-      "Bing Bong is looking around like: “So… where’s the next mountain?”"
+      "Bing Bong is looking around like: So… where’s the next mountain?"
     ],
     "unknown": [
       "Bing Bong is currently off-grid, gathering supplies and emotional resilience."
