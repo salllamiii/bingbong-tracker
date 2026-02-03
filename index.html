@@ -16,8 +16,8 @@
     .wrap{ width:min(1120px, 100%); display:grid; gap:16px; grid-template-columns: 1.2fr .8fr; }
     @media (max-width: 940px){ .wrap{ grid-template-columns: 1fr; } }
     .card{ background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
-      border: 1px solid rgba(255,255,255,.10); border-radius: var(--radius);
-      box-shadow: var(--shadow); padding:18px; backdrop-filter: blur(10px); }
+      border: 1px solid rgba(255,255,255,.10); border-radius: 18px;
+      box-shadow: 0 10px 30px rgba(0,0,0,.35); padding:18px; backdrop-filter: blur(10px); }
     h1{ font-size: 26px; margin: 0 0 6px; letter-spacing:.2px; }
     h2{ font-size: 18px; margin: 16px 0 10px; }
     .sub{ color: var(--muted); margin:0 0 14px; line-height:1.4; }
@@ -27,14 +27,10 @@
     .pill.ok{ background: rgba(39,216,167,.14); border-color: rgba(39,216,167,.35); }
     .pill.warn{ background: rgba(255,204,102,.14); border-color: rgba(255,204,102,.35); }
 
-    .banner{
-      margin-top:12px; background: rgba(255,204,102,.12); border: 1px solid rgba(255,204,102,.35);
-      border-radius: 16px; padding: 12px; color: #fff2cc; display:none;
-    }
-    .entry{
-      background: rgba(0,0,0,.22); border:1px solid rgba(255,255,255,.08);
-      border-radius: 16px; padding:12px;
-    }
+    .banner{ margin-top:12px; background: rgba(255,204,102,.12); border: 1px solid rgba(255,204,102,.35);
+      border-radius: 16px; padding: 12px; color: #fff2cc; display:none; }
+    .entry{ background: rgba(0,0,0,.22); border:1px solid rgba(255,255,255,.08);
+      border-radius: 16px; padding:12px; }
     .entryTop{ display:flex; justify-content:space-between; gap:10px; align-items:baseline; }
     .when{ color: var(--muted); font-size:12px; }
     .place{ font-weight: 900; }
@@ -56,17 +52,12 @@
     }
 
     .timeline{ margin-top:12px; display:flex; flex-direction:column; gap:10px; }
-    .scan{
-      display:grid; grid-template-columns: 28px 1fr; gap:10px; align-items:start;
+    .scan{ display:grid; grid-template-columns: 28px 1fr; gap:10px; align-items:start;
       background: rgba(0,0,0,.18); border:1px solid rgba(255,255,255,.08);
-      border-radius: 16px; padding:10px 12px;
-    }
-    .dot{
-      width: 18px; height: 18px; border-radius: 999px; margin-top:2px;
-      border: 2px solid rgba(255,255,255,.18);
-      display:flex; align-items:center; justify-content:center; font-size:12px;
-      background: rgba(39,216,167,.18); border-color: rgba(39,216,167,.45);
-    }
+      border-radius: 16px; padding:10px 12px; }
+    .dot{ width: 18px; height: 18px; border-radius: 999px; margin-top:2px;
+      border: 2px solid rgba(255,255,255,.18); display:flex; align-items:center; justify-content:center; font-size:12px;
+      background: rgba(39,216,167,.18); border-color: rgba(39,216,167,.45); }
     .scanTitle{ font-weight:900; }
     .scanMeta{ color: var(--muted); font-size:12px; margin-top:2px; }
     .scanDesc{ margin-top:6px; color: #eef0ff; line-height:1.4; }
@@ -77,7 +68,6 @@
 
 <body>
   <div class="wrap">
-    <!-- MAIN -->
     <div class="card">
       <h1>📦 Bing Bong Tracker</h1>
       <p class="sub" id="subtitle">Loading dispatch chaos…</p>
@@ -112,7 +102,6 @@
       </div>
     </div>
 
-    <!-- RIGHT PANEL -->
     <div class="card">
       <h2>🗞️ Daily Bing Bong Report</h2>
       <p class="sub" id="dailyMeta">Loading today’s report…</p>
@@ -144,7 +133,6 @@ function escapeHtml(str){
     .replaceAll('"',"&quot;").replaceAll("'","&#039;");
 }
 
-// UK time helpers
 function getUKNowParts(){
   const parts = new Intl.DateTimeFormat("en-GB", {
     timeZone: "Europe/London",
@@ -177,7 +165,6 @@ function timeToMinutes(t){
   return (Number.isFinite(h) ? h : 0) * 60 + (Number.isFinite(m) ? m : 0);
 }
 
-// stable fake tracking number
 function fnv1a(str){
   let h = 0x811c9dc5;
   for(let i=0;i<str.length;i++){
@@ -221,7 +208,6 @@ function scansThatHaveHappened(d){
       if (s.whenISO < todayUK) return true;
       if (s.whenISO > todayUK) return false;
 
-      // same UK day: unlock only after whenTime
       const unlockMin = timeToMinutes(s.whenTime);
       return nowMin >= unlockMin;
     })
@@ -248,7 +234,6 @@ function renderTimeline(pastScans){
     return;
   }
 
-  // newest first
   pastScans.slice().reverse().forEach(s => {
     const div = document.createElement("div");
     div.className = "scan";
@@ -264,7 +249,6 @@ function renderTimeline(pastScans){
   });
 }
 
-// Deterministic daily randomness
 function hashStr(str){
   let h = 2166136261 >>> 0;
   for (let i=0;i<str.length;i++){
@@ -342,12 +326,10 @@ function render(d){
   el("subtitle").textContent = `Mission: deliver Bing Bong to ${d.friendName || "Pev"}. Birthday: ${niceDate(d.birthdayDate)}.`;
   el("trackingPill").textContent = `Tracking: ${makeTrackingNumber(d)}`;
 
-  // Fake ETA: countdown to crash (by date only), then ??? after crash
   const crashScan = (Array.isArray(d.scans) ? d.scans : []).find(s => String(s.stageKey) === "crash");
   const crashISO = crashScan ? crashScan.whenISO : null;
 
   if(crashISO && todayISO < crashISO){
-    // date-only countdown
     const t0 = dateFromISO(todayISO);
     const t1 = dateFromISO(crashISO);
     const daysToCrash = Math.max(0, Math.round((t1 - t0) / (1000*60*60*24)));
@@ -358,10 +340,8 @@ function render(d){
     el("etaPill").textContent = "ETA: Bing Bong-time";
   }
 
-  // No "days until arrival" line (leave blank)
   el("countdown").textContent = "";
 
-  // status (based on whether Delivered scan has unlocked yet)
   const latest = past.length > 0 ? past[past.length - 1] : null;
   const stage = stageKeyFromLatestScan(latest);
 
@@ -371,28 +351,24 @@ function render(d){
   el("statusPill").textContent = `Status: ${delivered ? "Delivered ✅" : (preShip ? "Preparing for Dispatch" : "In Transit")}`;
   el("statusPill").className = delivered ? "pill ok" : (preShip ? "pill warn" : "pill ok");
 
-  // birthday banner (late vs birthday)
   const bday = d.birthdayDate;
   const banner = el("birthdayBanner");
   const pill = el("birthdayPill");
 
-  // if delivered already: hide banner
   if(delivered){
     pill.style.display = "none";
     banner.style.display = "none";
   } else {
-    // show birthday banner only on/after birthday (fun)
     if(todayISO === bday){
       pill.style.display = "";
       banner.style.display = "";
-      banner.textContent = "🎂 It’s Pev’s birthday TODAY. Bing Bong performed a ceremonial squeak and promised he’s ‘basically arriving spiritually.’";
+      banner.textContent = "🎂 It’s Pev’s birthday TODAY. Bing Bong performed a ceremonial squeak and promised he was ‘basically arriving spiritually.’";
     } else {
       pill.style.display = "none";
       banner.style.display = "none";
     }
   }
 
-  // latest scan display + progress
   if(latest){
     el("currentPlace").textContent = `Latest scan: ${latest.title || "SCAN"}`;
     el("currentMsg").textContent = `${latest.loc || "Unknown"} — ${scanDisplayDate(latest)}. ${latest.desc || ""}`;
@@ -410,7 +386,6 @@ function render(d){
   renderTimeline(past);
 }
 
-// Boot
 (async () => {
   try{
     const d = await loadData();
